@@ -1,6 +1,7 @@
+import 'package:app_erpp/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:app_erpp/home_page.dart';
+import 'package:app_erpp/dashboard_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
         elevation: 0,
         backgroundColor: const Color.fromARGB(0, 29, 27, 27),
       ),
+
       body: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(27),
@@ -108,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => DashboardPage()),
                   );
                 },
               ),

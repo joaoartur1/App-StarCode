@@ -8,7 +8,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Página Inicialgit",
+          "Página Inicial",
           style: TextStyle(fontSize: 20, color: Colors.black),
         ),
         leadingWidth: 30,
