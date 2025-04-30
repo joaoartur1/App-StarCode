@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -7,33 +8,46 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Image.asset(
+            'assets/images/starcode-logo-removebg-preview.png',
+            height: 32,
+          ),
+        ),
         title: Row(
           children: [
-            Icon(Icons.star, color: Colors.orange),
             Spacer(),
+            IconButton(
+              iconSize: 22,
+              icon: Icon(Icons.notifications_none, color: Colors.black),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Voce não tem novas notificações.'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+            ),
+
+            SizedBox(width: 14),
             CircleAvatar(
               backgroundImage: AssetImage(
                 'assets/images/starcode-logo-removebg-preview.png',
-              ), // Substitua com imagem real
+              ),
             ),
           ],
         ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      backgroundColor: Color(0xFFF5F5F5),
+
+      backgroundColor: Color.fromARGB(244, 219, 216, 216),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            DropdownButton<String>(
-              value: "Mensal",
-              items:
-                  ["Mensal", "Semanal", "Anual"]
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                      .toList(),
-              onChanged: (_) {},
-            ),
             SizedBox(height: 16),
             _buildCard(
               title: "Contas a receber",
@@ -63,6 +77,7 @@ class DashboardPage extends StatelessWidget {
               amountColor: Colors.black,
               subtitleColor: Colors.red[100]!,
             ),
+            _buildCashFlowChart(),
           ],
         ),
       ),
@@ -101,6 +116,100 @@ class DashboardPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(subtitle, style: TextStyle(fontSize: 12)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCashFlowChart() {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Fluxo de caixa",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 200,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: 6000,
+                  minY: -3000,
+                  titlesData: FlTitlesData(
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, _) {
+                          const months = [
+                            'Jan',
+                            'Fev',
+                            'Mar',
+                            'Abr',
+                            'Mai',
+                            'Jun',
+                            'Jul',
+                          ];
+                          if (value.toInt() >= 0 &&
+                              value.toInt() < months.length) {
+                            return Text(months[value.toInt()]);
+                          }
+                          return Text('');
+                        },
+                      ),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                  gridData: FlGridData(show: false),
+                  borderData: FlBorderData(show: false),
+                  barGroups: [
+                    BarChartGroupData(
+                      x: 0,
+                      barRods: [BarChartRodData(toY: 0, color: Colors.grey)],
+                    ),
+                    BarChartGroupData(
+                      x: 1,
+                      barRods: [BarChartRodData(toY: 0, color: Colors.grey)],
+                    ),
+                    BarChartGroupData(
+                      x: 2,
+                      barRods: [BarChartRodData(toY: 0, color: Colors.grey)],
+                    ),
+                    BarChartGroupData(
+                      x: 3,
+                      barRods: [BarChartRodData(toY: -2000, color: Colors.red)],
+                    ),
+                    BarChartGroupData(
+                      x: 4,
+                      barRods: [
+                        BarChartRodData(toY: 5000, color: Colors.green),
+                      ],
+                    ),
+                    BarChartGroupData(
+                      x: 5,
+                      barRods: [BarChartRodData(toY: 0, color: Colors.grey)],
+                    ),
+                    BarChartGroupData(
+                      x: 6,
+                      barRods: [BarChartRodData(toY: 0, color: Colors.grey)],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
