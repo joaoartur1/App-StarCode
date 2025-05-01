@@ -78,6 +78,7 @@ class DashboardPage extends StatelessWidget {
               subtitleColor: Colors.red[100]!,
             ),
             _buildCashFlowChart(),
+            _buildSalesChart(),
           ],
         ),
       ),
@@ -93,7 +94,7 @@ class DashboardPage extends StatelessWidget {
   }) {
     return Card(
       elevation: 2,
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 20),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -142,6 +143,13 @@ class DashboardPage extends StatelessWidget {
                   alignment: BarChartAlignment.spaceAround,
                   maxY: 6000,
                   minY: -3000,
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (group) => Colors.black,
+                      tooltipRoundedRadius: 8,
+                    ),
+                  ),
                   titlesData: FlTitlesData(
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
@@ -214,6 +222,103 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSalesChart() {
+    final double maxY = 12;
+
+    final barGroups = [
+      _buildBarData(0, 5),
+      _buildBarData(1, 2),
+      _buildBarData(2, 8),
+      _buildBarData(3, 4),
+      _buildBarData(4, 1),
+      _buildBarData(5, 6),
+    ];
+
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Desempenho de Vendas",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            SizedBox(
+              height: 200,
+              child: BarChart(
+                BarChartData(
+                  maxY: maxY,
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (group) => Colors.black,
+                      tooltipRoundedRadius: 8,
+                    ),
+                  ),
+                  barGroups: barGroups,
+                  borderData: FlBorderData(show: false),
+                  gridData: FlGridData(show: false),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, _) {
+                          const months = [
+                            'Jan',
+                            'Fev',
+                            'Mar',
+                            'Abr',
+                            'Mai',
+                            'Jun',
+                          ];
+                          return Padding(
+                            padding: EdgeInsets.only(top: 8),
+                            child: Text(
+                              months[value.toInt()],
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  BarChartGroupData _buildBarData(int x, double value) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: 12,
+          color: Colors.grey[200],
+          width: 20,
+          borderRadius: BorderRadius.circular(4),
+          rodStackItems: [BarChartRodStackItem(0, value, Colors.orange)],
+        ),
+      ],
     );
   }
 }
